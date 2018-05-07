@@ -5,6 +5,9 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h> //inclusion
+#include <Servo.h>
+Servo myservo;
+int pos = 0;
 
 ESP8266WebServer server(80);
 
@@ -14,18 +17,19 @@ String message = ""; //empty string, accepts client requests
 String ssid_custome = "";//custome ssid
 String password_custome = "";//custome PSK
 const int led = 2; //define the pin where LED is pluged on esp8266
-String request_url="";//custome location of the HTTP server
-int commaPosition1=0;
-int commaPosition2=0;
+String request_url = ""; //custome location of the HTTP server
+int commaPosition1 = 0;
+int commaPosition2 = 0;
+
 void handleNotFound() {
   Serial.println("Proccessing");
   message += server.uri(); //extract the ssid, password, request url from the GET request
   commaPosition1 = message.indexOf('=');
-  commaPosition2 = message.indexOf('=',commaPosition1+1);
-  if (commaPosition1!=0 && commaPosition2!=0){
-  ssid_custome = message.substring(1, commaPosition1);
-  password_custome = message.substring(commaPosition1 + 1, commaPosition2);
-  request_url = message.substring(commaPosition2 + 1, message.length());//divide the message to there part by '='
+  commaPosition2 = message.indexOf('=', commaPosition1 + 1);
+  if (commaPosition1 != 0 && commaPosition2 != 0) {
+    ssid_custome = message.substring(1, commaPosition1);
+    password_custome = message.substring(commaPosition1 + 1, commaPosition2);
+    request_url = message.substring(commaPosition2 + 1, message.length());//divide the message to there part by '='
   }
   delay(10);
   Serial.println(ssid_custome);//set the custome ssid
@@ -51,7 +55,7 @@ void setup() {
 
   WiFi.mode(WIFI_STA);//switch the esp8266 to a station
   WiFi.begin(ssid_custome.c_str(), password_custome.c_str()); //connect to Wi-Fi using ssid and password obtained form python clients
-  
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");//wait for connection
@@ -59,12 +63,16 @@ void setup() {
   Serial.println("");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());//debug message
+
+  myservo.attach(2);
+  delay(1000);
+  myservo.write(0);
 }
 
 void loop() {
   //Serial.println(ssid_custome);
   //Serial.println(password_custome);
-  delay(10); 
+  delay(10);
   // wait for WiFi connection
 
   HTTPClient http; //initialize a HTTP client
@@ -88,12 +96,17 @@ void loop() {
       String payload = http.getString();//extract the status
       Serial.println(payload);
       if ( light_off == payload) {
-        digitalWrite(2, LOW); // if the LED is set 'off'
+        //digitalWrite(2, LOW); // if the LED is set 'off'
+        myservo.write(0);
+        //delay(1000);
         Serial.print("light is off");
       }
 
       if ( light_on == payload) {
-        digitalWrite(2, HIGH);// if the LED is set 'on'
+        //digitalWrite(2, HIGH);// if the LED is set 'on'
+        myservo.write(0);
+        delay(1000);
+        myservo.write(70);
         Serial.print("light is on");
       }
     }
