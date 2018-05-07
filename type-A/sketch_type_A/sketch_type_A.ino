@@ -7,7 +7,6 @@
 #include <ESP8266mDNS.h> //inclusion
 #include <Servo.h>
 Servo myservo;
-int pos = 0;
 
 ESP8266WebServer server(80);
 
@@ -98,15 +97,14 @@ void loop() {
       if ( light_off == payload) {
         //digitalWrite(2, LOW); // if the LED is set 'off'
         myservo.write(0);
-        //delay(1000);
+        delay(1000);
         Serial.print("light is off");
       }
 
       if ( light_on == payload) {
         //digitalWrite(2, HIGH);// if the LED is set 'on'
-        myservo.write(0);
-        delay(1000);
         myservo.write(70);
+        delay(1000);
         Serial.print("light is on");
       }
     }
