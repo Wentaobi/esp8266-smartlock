@@ -103,8 +103,12 @@ void loop() {
 
       if ( light_on == payload) {
         //digitalWrite(2, HIGH);// if the LED is set 'on'
-        myservo.write(70);
-        delay(1000);
+        for(pos=0;pos<=70;pos++){
+          myservo.write(pos);
+          delay(20);
+          }
+        //myservo.write(70);
+        
         Serial.print("light is on");
       }
     }
