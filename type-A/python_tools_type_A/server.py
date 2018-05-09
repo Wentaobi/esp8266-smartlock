@@ -11,7 +11,7 @@ def application(environ, start_response):
     #print(status)
     start_response('200 OK', [('Content-Type', 'text/plain')])
     if command!='/status.html':
-        return ['done!'] #if we do on or off option, the server return a message "done!"
+        return [b'done!'] #if we do on or off option, the server return a message "done!"
     if status == 0:
         return [b'0'] #if we GET the status, the server return the value of 'status' as a BYTE type
     if status == 1:

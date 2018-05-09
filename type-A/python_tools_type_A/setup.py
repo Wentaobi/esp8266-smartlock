@@ -11,6 +11,8 @@ def get_AP_info():
     password=input()
     return({'ssid':ssid,'password':password}) #return a dict including the ssid and the PSK
 def set_esp(ap_info):
+    print('default server: ')
+    print(host_url)
     res = requests.get("http://192.168.4.1/"+ap_info['ssid']+"="+ap_info['password']+"="+request_url) #192.168.4.1 is esp8266's default ip address when it serves as an access point. the requests sends ssid, PSK and the location of HTTP server to esp8266
     #还需加入超时检测
     return(res.text)
