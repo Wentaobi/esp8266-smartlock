@@ -19,6 +19,8 @@ const int led = 2; //define the pin where LED is pluged on esp8266
 String request_url = ""; //custome location of the HTTP server
 int commaPosition1 = 0;
 int commaPosition2 = 0;
+int sts=0;
+
 
 void handleNotFound() {
   Serial.println("Proccessing");
@@ -94,21 +96,23 @@ void loop() {
     if (httpCode == HTTP_CODE_OK) {
       String payload = http.getString();//extract the status
       Serial.println(payload);
-      if ( light_off == payload) {
+      if ( light_off == payload and sts==1) {
         //digitalWrite(2, LOW); // if the LED is set 'off'
         myservo.write(0);
         delay(1000);
         Serial.print("light is off");
+        sts=0;
       }
 
-      if ( light_on == payload) {
+      if ( light_on == payload and sts==0) {
         //digitalWrite(2, HIGH);// if the LED is set 'on'
-        for(pos=0;pos<=70;pos++){
+        
+        for(int pos=0;pos<=70;pos++){
           myservo.write(pos);
-          delay(20);
+          delay(10);
           }
         //myservo.write(70);
-        
+        sts=1;
         Serial.print("light is on");
       }
     }
