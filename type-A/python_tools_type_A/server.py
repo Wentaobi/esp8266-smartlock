@@ -10,7 +10,7 @@ def application(environ, start_response):
         status = 0 #change the state
     #print(status)
     start_response('200 OK', [('Content-Type', 'text/plain')])
-    if command!='/status.html':
+    if command!='/status':
         return [b'done!'] #if we do on or off option, the server return a message "done!"
     if status == 0:
         return [b'0'] #if we GET the status, the server return the value of 'status' as a BYTE type
